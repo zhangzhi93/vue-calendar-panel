@@ -1,0 +1,6 @@
+node_modules/
+package-lock.json
+App.vue
+main.js
+index.html
+webpack.config.js

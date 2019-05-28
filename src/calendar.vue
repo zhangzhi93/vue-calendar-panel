@@ -1,0 +1,261 @@
+<template>
+  <div class="janz-container">
+    <div class="janz-change-btns">
+      <div class="pre-btn"
+        @click="PreMonth(myDate)">上个月</div>
+      <div class="top-date">{{dateNow}}</div>
+      <div class="next-btn"
+        @click="NextMonth(myDate)">下个月</div>
+    </div>
+    <div class="janz-weeks">
+      <div class="week-item"
+        v-for="(tag,index) in weeks"
+        :key="index">
+        <div class="weeks-tag">{{tag}}</div>
+      </div>
+    </div>
+    <div class="janz-days">
+      <div class="day-item-rows"
+        v-for="(item,index) in daysList"
+        :key="index">
+        <div class="day-item"
+          v-for="(day,key) in item"
+          :key="key">
+          <div class="day-tag"
+            :class="[{'day-mark':day.isMark},{'day-otherMonth':day.otherMonth!='nowMonth'},{'day-disable':day.disable},day.activeClassName]"
+            @click="clickDay(day)">{{day.id}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import dateUtil from './calendar';
+
+export default {
+  name: 'calendar',
+  props: {
+    switchTo: {
+      type: String,
+      default: ''
+    },
+    markDate: {
+      type: Array,
+      default: () => []
+    },
+    sundayStart: {
+      type: Boolean,
+      default: () => true
+    },
+    weeks: {
+      type: Array,
+      default: () => ["日", "一", "二", "三", "四", "五", "六"]
+    },
+    disableDate: {
+      type: [String, Array],
+      default: () => []
+    }
+  },
+  data() {
+    return {
+      myDate: '',
+      daysList: [],
+      dateNow: ''
+    };
+  },
+  watch: {
+    markDate: {
+      handler(val, oldVal) {
+        this.getList(this.myDate);
+      },
+      deep: true
+    },
+    switchTo(val) {
+      this.jumpToMonth(val);
+    }
+  },
+  methods: {
+    initStart() {
+      dateUtil.sundayStart = this.sundayStart;
+    },
+    clickDay(item) {
+      if (item.otherMonth === "nowMonth" && !item.disable) {
+        this.getList(this.myDate, item.date);
+        this.$emit("selectDay", item.date);
+      }
+      if (item.otherMonth !== "nowMonth") {
+        item.otherMonth === "preMonth" ? this.PreMonth(item.date) : this.NextMonth(item.date);
+        this.$emit("selectDay", item.date);
+      }
+    },
+    jumpToMonth(date) {
+      date = dateUtil.dateFormat(date);
+      this.myDate = new Date(date);
+      this.$emit("changeMonth", dateUtil.dateFormat(this.myDate));
+      this.getList(this.myDate, date);
+    },
+    PreMonth(date) {
+      date = dateUtil.dateFormat(date);
+      this.myDate = dateUtil.getOtherMonth(this.myDate, "preMonth");
+      this.$emit("changeMonth", dateUtil.dateFormat(this.myDate));
+      this.getList(this.myDate, date);
+    },
+    NextMonth(date) {
+      date = dateUtil.dateFormat(date);
+      this.myDate = dateUtil.getOtherMonth(this.myDate, "nextMonth");
+      this.$emit("changeMonth", dateUtil.dateFormat(this.myDate));
+      this.getList(this.myDate, date);
+    },
+    forMatArgs() {
+      let markDate = this.markDate;
+      markDate = markDate.map(k => {
+        return dateUtil.dateFormat(k);
+      });
+      return markDate;
+    },
+    getList(date, chooseDay) {
+      this.dateNow = `${date.getFullYear()}年${date.getMonth() + 1}月`;
+      const markDate = this.forMatArgs();
+      const MonthList = dateUtil.getMonthList(date);
+      const MonthArr = [];
+      let rowsList = [];
+      for (let i = 0; i < MonthList.length; i++) {
+        let markClassName = '';
+        let activeClassName = '';
+        let k = MonthList[i];
+        const nowDate = k.date; // k.date->2019/05/27
+        const weekday = new Date(nowDate).getDay();
+        if (chooseDay === nowDate) {
+          k.activeClassName = 'active';
+        } else {
+          k.activeClassName = '';
+        }
+        k.isMark = this.markDate.includes(nowDate);
+        //无法选中某天
+        if (this.disableDate === 'weekend') {
+          k.disable = (weekday === 0 || weekday === 6) ? true : false;
+        } else {
+          k.disable = this.disableDate.includes(nowDate);
+        }
+        if (i % 7 === 6) {
+          rowsList.push(k);
+          MonthArr.push(rowsList);
+          rowsList = [];
+        } else {
+          rowsList.push(k);
+        }
+      }
+      this.daysList = MonthArr;
+    }
+  },
+  created() {
+    this.initStart();
+    this.myDate = new Date();
+  },
+  mounted() {
+    this.getList(this.myDate, '2019/05/28');
+  }
+}
+</script>
+
+<style lang="less" scoped>
+@main-color: #35c2ff;
+.janz-container {
+  max-width: 414px;
+  margin: 0 auto;
+  padding: 10px;
+  font-size: 14px;
+}
+.janz-change-btns {
+  display: flex;
+  padding: 0 10px;
+  .pre-btn {
+    flex: 1;
+    text-align: left;
+    color: @main-color;
+    &:before {
+      content: "";
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-top: 2px solid @main-color;
+      border-left: 2px solid @main-color;
+      transform: rotate(-45deg);
+    }
+  }
+  .next-btn {
+    flex: 1;
+    text-align: right;
+    color: @main-color;
+    &:after {
+      content: "";
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-top: 2px solid @main-color;
+      border-right: 2px solid @main-color;
+      transform: rotate(45deg);
+    }
+  }
+  .top-date {
+    text-align: center;
+    color: #000;
+    font-size: 16px;
+  }
+}
+.janz-weeks {
+  display: flex;
+  text-align: center;
+  background-color: @main-color;
+  color: #fff;
+  border-radius: 6px;
+  margin-top: 10px;
+  padding: 6px 0;
+  > div {
+    flex: 1;
+  }
+}
+.janz-days {
+  margin-top: 4px;
+  .day-item-rows {
+    display: flex;
+    height: 48px;
+    .day-item {
+      flex: 1;
+      padding: 2px;
+    }
+    .day-tag {
+      background-color: #f2f2f2;
+      color: #000;
+      height: 100%;
+      border-radius: 2px;
+      padding: 5px 0 0 5px;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .day-tag.active {
+      background-color: @main-color;
+      color: #fff;
+    }
+    .day-tag.day-otherMonth {
+      color: #ccc;
+    }
+    .day-tag.day-disable{
+      background-color: #fbfbfb;
+    }
+    .day-tag.day-mark::after {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      left: 50%;
+      bottom: 8px;
+      margin-left: -2px;
+      background-color: @main-color;
+      border-radius: 50%;
+    }
+  }
+}
+</style>
