@@ -13,9 +13,9 @@ module.exports = {
     // libraryTarget: 'umd',
     // umdNamedDefine: true
   },
-  // devtool: 'source-map',
-  // mode: 'development',
-  mode: 'production',
+  devtool: 'source-map',
+  mode: 'development',
+  // mode: 'production',
   module: {
     rules: [{
       test: /\.vue$/,

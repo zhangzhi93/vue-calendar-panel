@@ -77,7 +77,8 @@ export default {
     const nextDate = this.getOtherMonth(date, 'nextMonth');
     const leftLength = this.getDaysInOneMonth(date) + this.getMonthweek(date);
     const _length = 7 - leftLength % 7;
-    for (let i = 0; i < _length; i++) {
+    const length = _length === 7 ? 0 : _length;
+    for (let i = 0; i < length; i++) {
       const nowTime = nextDate.getFullYear() + '/' + (nextDate.getMonth() + 1) + '/' + (i + 1);
       arr.push({
         id: i + 1,
