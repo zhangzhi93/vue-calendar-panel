@@ -26,7 +26,8 @@ export default {
     const month = timeArray[1];
     const day = timeArray[2];
     let year2 = year;
-    let month2;
+    let month2 = month;
+    let day2 = day;
     if (str === 'nextMonth') {
       month2 = parseInt(month) + 1;
       if (month2 == 13) {
@@ -40,13 +41,13 @@ export default {
         month2 = 12;
       }
     }
-    let day2 = day;
-    const days2 = new Date(year2, month2, 0).getDate();
-    if (day2 > days2) {
-      day2 = days2;
-    }
+
+    const MonthMaxDay = new Date(year2, parseInt(month2), 0).getDate();
     if (month2 < 10) {
       month2 = '0' + month2;
+    }
+    if (day > MonthMaxDay) {
+      day2 = MonthMaxDay;
     }
     if (day2 < 10) {
       day2 = '0' + day2;
@@ -57,9 +58,11 @@ export default {
   // 上个月末尾的一些日期
   getLeftArr(date) {
     const arr = [];
+    debugger
+    const preDate = this.getOtherMonth(date, 'preMonth');
     const leftNum = this.getMonthweek(date);
     const num = this.getDaysInOneMonth(this.getOtherMonth(date, 'preMonth')) - leftNum + 1;
-    const preDate = this.getOtherMonth(date, 'preMonth');
+
     // 上个月多少开始
     for (let i = 0; i < leftNum; i++) {
       const nowTime = preDate.getFullYear() + '/' + (preDate.getMonth() + 1) + '/' + (num + i);
@@ -71,7 +74,7 @@ export default {
     }
     return arr;
   },
-  // 下个月末尾的一些日期
+  // 下个月开始的一些日期
   getRightArr(date) {
     const arr = [];
     const nextDate = this.getOtherMonth(date, 'nextMonth');
@@ -92,7 +95,7 @@ export default {
   dateFormat(date) {
     date = typeof date === 'string' ? new Date(date.replace(/\-/g, '/')) : date;
     const year = date.getFullYear();
-    const month = date.getMonth() < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+    const month = date.getMonth() < 9 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
     const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
     return year + '/' + month + '/' + day;
   },
@@ -101,7 +104,7 @@ export default {
     const arr = [];
     const num = this.getDaysInOneMonth(date);
     const year = date.getFullYear();
-    const month = date.getMonth() < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+    const month = date.getMonth() < 9 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
 
     for (let i = 0; i < num; i++) {
       const day = i < 9 ? '0' + (i + 1) : i + 1;

@@ -1,9 +1,6 @@
 <template>
   <div id="app">
-    <calendar :markDate="mark"
-      :switchTo="jumptoString"
-      @selectDay="clickDay" />
-
+    <calendar :markDate="mark" />
     <button @click="jumpTo">切换</button>
   </div>
 </template>
@@ -16,7 +13,7 @@ export default {
   data() {
     return {
       mark: ['2019/05/24', '2019/05/25'],
-      jumptoString: ''
+      currentDate: '2019/08/09'
     }
   },
   components: {
@@ -27,7 +24,7 @@ export default {
       console.log(date);
     },
     jumpTo() {
-      this.jumptoString = '2019/08/09'
+      this.currentDate = '2019/09/09'
     }
   }
 };
