@@ -9,6 +9,10 @@
 npm i vue-calendar-mobile-panel -S
 ```
 
+## Preview
+
+![avatar](C:\Users\zhangzhi02\Desktop\20190830095014.png)
+
 ## Usage
 
 ```javascript
@@ -16,24 +20,33 @@ npm i vue-calendar-mobile-panel -S
 import Calendar from 'vue-calendar-mobile-panel';
 
   <Calendar
+      v-model="currentDate"
       :sundayStart="true" // 默认是周一开始 当是true的时候 是周日开始
-      :switchTo="2019/09/09" // 跳转的某月某日
-      :weeks="[]"
-      :disableDate="[]"
-      :markDate="[]"
-      @selectDay="clickDay"
-      @changeMonth="changeDate"
+      :weeks="[]" // ["日", "一", "二", "三", "四", "五", "六"]
+      :disableDate="[]" // 禁用日期
+      :markDate="[]" // 标记日期
+      @change="changeDate" //日期改变时触发
   ></Calendar>
 
+  <button @click="jumpTo">跳转到某日期</button>
+
+  data() {
+    return {
+      mark: ['2019/05/24', '2019/05/25'],
+      currentDate: '2019/08/09'
+    }
+  },
   components: {
     Calendar
   },
+  watch: {
+    currentDate(val) {
+      console.log(val);
+    }
+  },
   methods:{
-    clickDay(data) {
-      console.log(data); //选中某天
-    },
-    changeDate(data) {
-      console.log(data); // 切换月份时触发
-    },
+    jumpTo() {
+      this.currentDate = '2019/09/09'
+    }
   }
 ```

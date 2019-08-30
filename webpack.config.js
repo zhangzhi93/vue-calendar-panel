@@ -9,13 +9,13 @@ module.exports = {
   output: {
     filename: 'main.js',
     path: path.resolve(__dirname, 'dist'),
-    // library: 'vue-calendar-mobile-panel',
-    // libraryTarget: 'umd',
-    // umdNamedDefine: true
+    library: 'vue-calendar-mobile-panel',
+    libraryTarget: 'umd',
+    umdNamedDefine: true
   },
-  devtool: 'source-map',
-  mode: 'development',
-  // mode: 'production',
+  // devtool: 'source-map',
+  // mode: 'development',
+  mode: 'production',
   module: {
     rules: [{
       test: /\.vue$/,

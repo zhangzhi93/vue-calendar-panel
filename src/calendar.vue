@@ -70,9 +70,6 @@ export default {
       handler: 'jumpToMonth',
       immediate: true
     },
-    mydate(){
-      
-    }
   },
   methods: {
     initStart() {
@@ -91,17 +88,17 @@ export default {
     },
     jumpToMonth(date) {
       this.myDate = new Date(date);
-      this.$emit("changeMonth", dateUtil.dateFormat(this.myDate));
+      this.$emit("change", dateUtil.dateFormat(this.myDate));
       this.getList(this.myDate);
     },
     PreMonth(date) {
       this.myDate = dateUtil.getOtherMonth(this.myDate, "preMonth");
-      this.$emit("changeMonth", dateUtil.dateFormat(this.myDate));
+      this.$emit("change", dateUtil.dateFormat(this.myDate));
       this.getList(this.myDate);
     },
     NextMonth(date) {
       this.myDate = dateUtil.getOtherMonth(this.myDate, "nextMonth");
-      this.$emit("changeMonth", dateUtil.dateFormat(this.myDate));
+      this.$emit("change", dateUtil.dateFormat(this.myDate));
       this.getList(this.myDate);
     },
     forMatArgs() {

@@ -58,7 +58,6 @@ export default {
   // 上个月末尾的一些日期
   getLeftArr(date) {
     const arr = [];
-    debugger
     const preDate = this.getOtherMonth(date, 'preMonth');
     const leftNum = this.getMonthweek(date);
     const num = this.getDaysInOneMonth(this.getOtherMonth(date, 'preMonth')) - leftNum + 1;

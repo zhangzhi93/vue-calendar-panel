@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <calendar :markDate="mark" />
+    <calendar v-model="currentDate" :markDate="mark" />
     <button @click="jumpTo">切换</button>
   </div>
 </template>
@@ -19,10 +19,12 @@ export default {
   components: {
     Calendar
   },
+  watch: {
+    currentDate(val) {
+      console.log(val);
+    }
+  },
   methods: {
-    clickDay(date) {
-      console.log(date);
-    },
     jumpTo() {
       this.currentDate = '2019/09/09'
     }
