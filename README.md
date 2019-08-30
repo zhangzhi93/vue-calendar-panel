@@ -11,7 +11,7 @@ npm i vue-calendar-mobile-panel -S
 
 ## Preview
 
-![avatar](C:\Users\zhangzhi02\Desktop\20190830095014.png)
+![image](https://github.com/zhangzhi93/vue-calendar-panel/blob/master/static/20190830095014.png)
 
 ## Usage
 
