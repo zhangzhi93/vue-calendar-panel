@@ -2,20 +2,18 @@ var path = require('path');
 var webpack = require("webpack");
 var { CleanWebpackPlugin } = require('clean-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var VueLoaderPlugin = require('vue-loader/lib/plugin')
+var VueLoaderPlugin = require('vue-loader/lib/plugin');
+
+const isProduction = true;
 
 module.exports = {
-  entry: './main.js',
+  entry: isProduction ? './src/index.js' : './main.js',
   output: {
-    filename: 'main.js',
+    filename: isProduction ? 'index.js' : 'main.js',
     path: path.resolve(__dirname, 'dist'),
-    library: 'vue-calendar-mobile-panel',
-    libraryTarget: 'umd',
-    umdNamedDefine: true
   },
-  // devtool: 'source-map',
-  // mode: 'development',
-  mode: 'production',
+  devtool: isProduction ? 'cheap-module-source-map' : 'cheap-module-source-map',
+  mode: isProduction ? 'production' : 'development',
   module: {
     rules: [{
       test: /\.vue$/,
@@ -36,12 +34,6 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new VueLoaderPlugin(),
-    new HtmlWebpackPlugin({
-      title: 'demo',
-      filename: 'index.html',
-      template: './index.html',
-      inject: 'body'
-    }),
   ],
   resolve: {
     alias: {
@@ -67,4 +59,21 @@ module.exports = {
       }
     },
   }
+}
+
+if (isProduction) {
+  module.exports.output = Object.assign(module.exports.output, {
+    library: 'vue-calendar-mobile-panel',
+    libraryTarget: 'umd',
+    umdNamedDefine: true
+  });
+} else {
+  module.exports.plugins.push(
+    new HtmlWebpackPlugin({
+      title: 'demo',
+      filename: 'index.html',
+      template: './index.html',
+      inject: 'body'
+    }),
+  );
 }

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <calendar v-model="currentDate" :markDate="mark" />
+    <calendar v-model="currentDate" :markDate="mark" :disableDate="disableDate" @change="onChange"/>
     <button @click="jumpTo">切换</button>
   </div>
 </template>
@@ -12,8 +12,9 @@ export default {
   name: "app",
   data() {
     return {
-      mark: ['2019/05/24', '2019/05/25'],
-      currentDate: '2019/08/09'
+      mark: ['2019/10/24', '2019/10/28'],
+      disableDate: ['2019/10/14', '2019/10/18'],
+      currentDate: '2019/10/09'
     }
   },
   components: {
@@ -27,6 +28,9 @@ export default {
   methods: {
     jumpTo() {
       this.currentDate = '2019/09/09'
+    },
+    onChange(val){
+      //console.log(val);
     }
   }
 };

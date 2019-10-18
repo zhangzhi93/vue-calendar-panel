@@ -1,9 +1,9 @@
 <template>
   <div class="janz-container">
     <div class="janz-change-btns">
-      <div class="pre-btn" @click="PreMonth(myDate)">上个月</div>
+      <div class="pre-btn" @click="preMonth(myDate)">上个月</div>
       <div class="top-date">{{dateNow}}</div>
-      <div class="next-btn" @click="NextMonth(myDate)">下个月</div>
+      <div class="next-btn" @click="nextMonth(myDate)">下个月</div>
     </div>
     <div class="janz-weeks">
       <div class="week-item" v-for="(tag,index) in weeks" :key="index">
@@ -14,7 +14,7 @@
       <div class="day-item-rows" v-for="(item,index) in daysList" :key="index">
         <div class="day-item" v-for="(day,key) in item" :key="key">
           <div class="day-tag" :class="[{'day-mark':day.isMark},{'day-otherMonth':day.otherMonth!='nowMonth'},{'day-disable':day.disable},day.activeClassName]"
-            @click="clickDay(day)">{{day.id}}</div>
+            @click="clickToDate(day)">{{day.id}}</div>
         </div>
       </div>
     </div>
@@ -56,7 +56,7 @@ export default {
     return {
       myDate: '',
       daysList: [],
-      dateNow: ''
+      dateNow: '',
     };
   },
   watch: {
@@ -67,51 +67,43 @@ export default {
       deep: true
     },
     currentDate: {
-      handler: 'jumpToMonth',
+      handler: 'jumpTo',
       immediate: true
     },
+    myDate() {
+      this.getList(this.myDate);
+    }
   },
   methods: {
     initStart() {
       dateUtil.sundayStart = this.sundayStart;
-    },
-    clickDay(item) {
-      if (item.otherMonth === "nowMonth" && !item.disable) {
-        this.myDate = new Date(item.date);
-        this.getList(this.myDate);
-        this.$emit("change", item.date);
-      }
-      if (item.otherMonth !== "nowMonth") {
-        item.otherMonth === "preMonth" ? this.PreMonth(item.date) : this.NextMonth(item.date);
-        this.$emit("change", item.date);
-      }
-    },
-    jumpToMonth(date) {
-      this.myDate = new Date(date);
-      this.$emit("change", dateUtil.dateFormat(this.myDate));
       this.getList(this.myDate);
     },
-    PreMonth(date) {
+    clickToDate(date) {
+      if (date.disable) return;
+      this.myDate = date.date;
+    },
+    jumpTo(date) {
+      this.myDate = date;
+    },
+    preMonth(date) {
       this.myDate = dateUtil.getOtherMonth(this.myDate, "preMonth");
-      this.$emit("change", dateUtil.dateFormat(this.myDate));
-      this.getList(this.myDate);
     },
-    NextMonth(date) {
+    nextMonth(date) {
       this.myDate = dateUtil.getOtherMonth(this.myDate, "nextMonth");
-      this.$emit("change", dateUtil.dateFormat(this.myDate));
-      this.getList(this.myDate);
     },
-    forMatArgs() {
+    formatArgs() {
       let markDate = this.markDate;
       markDate = markDate.map(k => {
         return dateUtil.dateFormat(k);
       });
       return markDate;
     },
-    getList(date) {
-      this.dateNow = `${date.getFullYear()}年${date.getMonth() + 1}月`;
-      const markDate = this.forMatArgs();
-      const MonthList = dateUtil.getMonthList(date);
+    getList(dateStr) {
+      this.$emit("change", dateStr);
+      this.dateNow = `${dateStr.split('/')[0]}年${dateStr.split('/')[1]}月`;
+      const markDate = this.formatArgs();
+      const MonthList = dateUtil.getMonthList(dateStr);
       const MonthArr = [];
       let rowsList = [];
       for (let i = 0; i < MonthList.length; i++) {
@@ -120,19 +112,19 @@ export default {
         let k = MonthList[i];
         const nowDate = k.date; // k.date->2019/05/27
         const weekday = new Date(nowDate).getDay();
-        const chooseDay = dateUtil.dateFormat(date);
-        if (chooseDay === nowDate) {
-          k.activeClassName = 'active';
-        } else {
-          k.activeClassName = '';
-        }
-        k.isMark = this.markDate.includes(nowDate);
+        const chooseDay = dateStr;
         //无法选中某天
         if (this.disableDate === 'weekend') {
           k.disable = (weekday === 0 || weekday === 6) ? true : false;
         } else {
           k.disable = this.disableDate.includes(nowDate);
         }
+        if (chooseDay === nowDate) {
+          k.activeClassName = 'active';
+        } else {
+          k.activeClassName = '';
+        }
+        k.isMark = this.markDate.includes(nowDate);
         if (i % 7 === 6) {
           rowsList.push(k);
           MonthArr.push(rowsList);
@@ -146,7 +138,6 @@ export default {
   },
   created() {
     this.initStart();
-    this.myDate = new Date();
   },
 }
 </script>
@@ -235,7 +226,9 @@ export default {
       color: #ccc;
     }
     .day-tag.day-disable {
-      background-color: #fbfbfb;
+      background-color: #c8c9cc;
+      color: #fff;
+      cursor: not-allowed;
     }
     .day-tag.day-mark::after {
       content: "";
