@@ -23,8 +23,8 @@ import Calendar from 'vue-calendar-mobile-panel';
       v-model="currentDate"
       :sundayStart="true" // 默认是周一开始 当是true的时候 是周日开始
       :weeks="[]" // ["日", "一", "二", "三", "四", "五", "六"]
-      :disableDate="[]" // 禁用日期
-      :markDate="[]" // 标记日期
+      :disableDate="disableDate" // 禁用日期 字符串、数组，自定义函数 
+      :markDate="[]" // 标记日期 字符串、数组，自定义函数 同禁用日期使用方法
       @change="changeDate" //日期改变时触发
   ></Calendar>
 
@@ -33,6 +33,8 @@ import Calendar from 'vue-calendar-mobile-panel';
   data() {
     return {
       mark: ['2019/05/24', '2019/05/25'],
+      // disableDate: ['2019/10/14', '2019/10/18'],
+      // disableDate: 'weekend',
       currentDate: '2019/08/09'
     }
   },
@@ -46,7 +48,10 @@ import Calendar from 'vue-calendar-mobile-panel';
   },
   methods:{
     jumpTo() {
-      this.currentDate = '2019/09/09'
+      this.currentDate = '2019/09/09';
+    },
+    disableDate(item) {
+      return item.split('/')[2] === '12';
     }
   }
 ```

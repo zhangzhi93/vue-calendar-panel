@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <calendar v-model="currentDate" :markDate="mark" :disableDate="disableDate" @change="onChange"/>
+    <calendar v-model="currentDate" :markDate="mark" :disableDate="disableDate" @change="onChange" />
     <button @click="jumpTo">切换</button>
   </div>
 </template>
@@ -12,8 +12,10 @@ export default {
   name: "app",
   data() {
     return {
-      mark: ['2019/10/24', '2019/10/28'],
-      disableDate: ['2019/10/14', '2019/10/18'],
+      // mark: ['2019/10/24', '2019/10/28'],
+      // mark: '2019/10/28',
+      // disableDate: ['2019/10/14', '2019/10/18'],
+      // disableDate: 'weekend',
       currentDate: '2019/10/09'
     }
   },
@@ -29,8 +31,14 @@ export default {
     jumpTo() {
       this.currentDate = '2019/09/09'
     },
-    onChange(val){
+    onChange(val) {
       //console.log(val);
+    },
+    mark(item) {
+      return item.split('/')[2] === '11';
+    },
+    disableDate(item) {
+      return item.split('/')[2] === '12';
     }
   }
 };

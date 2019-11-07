@@ -48,7 +48,7 @@ export default {
       default: () => ["日", "一", "二", "三", "四", "五", "六"]
     },
     disableDate: {
-      type: [String, Array],
+      type: [String, Array, Function],
       default: () => []
     }
   },
@@ -60,12 +60,6 @@ export default {
     };
   },
   watch: {
-    markDate: {
-      handler(val, oldVal) {
-        this.getList(this.myDate);
-      },
-      deep: true
-    },
     currentDate: {
       handler: 'jumpTo',
       immediate: true
@@ -92,17 +86,9 @@ export default {
     nextMonth(date) {
       this.myDate = dateUtil.getOtherMonth(this.myDate, "nextMonth");
     },
-    formatArgs() {
-      let markDate = this.markDate;
-      markDate = markDate.map(k => {
-        return dateUtil.dateFormat(k);
-      });
-      return markDate;
-    },
     getList(dateStr) {
       this.$emit("change", dateStr);
       this.dateNow = `${dateStr.split('/')[0]}年${dateStr.split('/')[1]}月`;
-      const markDate = this.formatArgs();
       const MonthList = dateUtil.getMonthList(dateStr);
       const MonthArr = [];
       let rowsList = [];
@@ -114,17 +100,31 @@ export default {
         const weekday = new Date(nowDate).getDay();
         const chooseDay = dateStr;
         //无法选中某天
-        if (this.disableDate === 'weekend') {
-          k.disable = (weekday === 0 || weekday === 6) ? true : false;
-        } else {
+        if (dateUtil.dataType(this.disableDate) === 'String') {
+          if (this.disableDate === 'weekend') {
+            k.disable = [0, 6].includes(weekday);
+          } else {
+            k.disable = this.disableDate === nowDate;
+          }
+        } else if (dateUtil.dataType(this.disableDate) === 'Array') {
           k.disable = this.disableDate.includes(nowDate);
+        } else if (dateUtil.dataType(this.disableDate) === 'Function') {
+          k.disable = this.disableDate.call(this, nowDate);
+        }
+        // 标记某天
+        if (dateUtil.dataType(this.markDate) === 'String') {
+          k.isMark = this.markDate === nowDate;
+        } else if (dateUtil.dataType(this.markDate) === 'Array') {
+          k.isMark = this.markDate.includes(nowDate);
+        } else if (dateUtil.dataType(this.disableDate) === 'Function') {
+          k.isMark = this.markDate.call(this, nowDate);
         }
         if (chooseDay === nowDate) {
           k.activeClassName = 'active';
         } else {
           k.activeClassName = '';
         }
-        k.isMark = this.markDate.includes(nowDate);
+
         if (i % 7 === 6) {
           rowsList.push(k);
           MonthArr.push(rowsList);

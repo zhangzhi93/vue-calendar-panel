@@ -103,7 +103,7 @@ export default {
   },
   // format日期
   dateFormat(date) {
-    date = typeof date === 'string' ? new Date(date.replace(/\-/g, '/')) : date;
+    date = this.dataType(date) === 'String' ? new Date(date.replace(/\-/g, '/')) : date;
     const year = date.getFullYear();
     const month = date.getMonth() < 9 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
     const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
@@ -134,4 +134,22 @@ export default {
   getMonthList(dateStr) {
     return [...this.getLeftArr(dateStr), ...this.getMonthListNoOther(dateStr), ...this.getRightArr(dateStr)];
   },
+  // 判断类型
+  dataType(data) {
+    const typeString = Object.prototype.toString.call(data);
+    switch (typeString) {
+      case '[object String]':
+        return 'String';
+      case '[object Array]':
+        return 'Array'
+      case '[object Function]':
+        return 'Function'
+      case '[object Date]':
+        return 'Date'
+      case '[object Object]':
+        return 'Object'
+      default:
+        return data;
+    }
+  }
 };
