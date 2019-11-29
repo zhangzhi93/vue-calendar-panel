@@ -4,7 +4,7 @@ var { CleanWebpackPlugin } = require('clean-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var VueLoaderPlugin = require('vue-loader/lib/plugin');
 
-const isProduction = true;
+const isProduction = false;
 
 module.exports = {
   entry: isProduction ? './src/index.js' : './main.js',
