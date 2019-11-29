@@ -358,7 +358,7 @@ __webpack_require__.r(__webpack_exports__);
 
 exports = module.exports = __webpack_require__(/*! ./node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "*[data-v-472cff63] {\n  margin: 0;\n  padding: 0;\n}\nbody[data-v-472cff63],\n#app[data-v-472cff63] {\n  width: 100%;\n  height: 100%;\n}\n", ""]);
+exports.push([module.i, ".device[data-v-472cff63] {\n  width: 375px;\n  margin: 10px auto;\n  background-color: #f8f8ff;\n  min-height: 667px;\n}\n.title[data-v-472cff63] {\n  background-color: #fff;\n  text-align: center;\n  padding: 12px 0;\n  font-size: 14px;\n}\n.btn[data-v-472cff63] {\n  display: block;\n  margin: 0 auto;\n  padding: 5px 10px;\n}\n", ""]);
 
 
 /***/ }),
@@ -1310,6 +1310,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 
@@ -1368,8 +1370,12 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { attrs: { id: "app" } },
+    { staticClass: "device" },
     [
+      _c("div", { staticClass: "title" }, [
+        _vm._v("vue-calendar-mobile-panel")
+      ]),
+      _vm._v(" "),
       _c("calendar", {
         attrs: { markDate: _vm.mark, disableDate: _vm.disableDate },
         on: { change: _vm.onChange },
@@ -1382,7 +1388,13 @@ var render = function() {
         }
       }),
       _vm._v(" "),
-      _c("button", { on: { click: _vm.jumpTo } }, [_vm._v("切换")])
+      _c("p", { staticStyle: { "text-align": "center", margin: "10px 0" } }, [
+        _vm._v("每个月12号禁用，每个月11号标记")
+      ]),
+      _vm._v(" "),
+      _c("button", { staticClass: "btn", on: { click: _vm.jumpTo } }, [
+        _vm._v("切到2019/10/09")
+      ])
     ],
     1
   )

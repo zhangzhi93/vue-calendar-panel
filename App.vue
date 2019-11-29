@@ -1,7 +1,9 @@
 <template>
-  <div id="app">
+  <div class="device">
+    <div class="title">vue-calendar-mobile-panel</div>
     <calendar v-model="currentDate" :markDate="mark" :disableDate="disableDate" @change="onChange" />
-    <button @click="jumpTo">切换</button>
+    <p style="text-align:center;margin:10px 0;">每个月12号禁用，每个月11号标记</p>
+    <button @click="jumpTo" class="btn">切到2019/10/09</button>
   </div>
 </template>
 
@@ -45,13 +47,21 @@ export default {
 </script>
 
 <style lang="less" scoped>
-* {
-  margin: 0;
-  padding: 0;
+.device {
+  width: 375px;
+  margin: 10px auto;
+  background-color: #f8f8ff;
+  min-height: 667px;
 }
-body,
-#app {
-  width: 100%;
-  height: 100%;
+.title {
+  background-color: #fff;
+  text-align: center;
+  padding: 12px 0;
+  font-size: 14px;
+}
+.btn {
+  display: block;
+  margin: 0 auto;
+  padding: 5px 10px;
 }
 </style>
