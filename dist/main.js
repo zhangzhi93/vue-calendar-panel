@@ -242,7 +242,7 @@ __webpack_require__.r(__webpack_exports__);
       default: _calendar__WEBPACK_IMPORTED_MODULE_0__["default"].dateFormat(new Date())
     },
     markDate: {
-      type: Array,
+      type: [String, Array, Function],
       default: () => []
     },
     sundayStart: {

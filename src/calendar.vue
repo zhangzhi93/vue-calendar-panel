@@ -36,7 +36,7 @@ export default {
       default: dateUtil.dateFormat(new Date())
     },
     markDate: {
-      type: Array,
+      type: [String, Array, Function],
       default: () => []
     },
     sundayStart: {
