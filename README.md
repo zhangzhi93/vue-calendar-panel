@@ -9,9 +9,13 @@
 npm i vue-calendar-mobile-panel -S
 ```
 
+## Demo
+
+[vue-calendar-mobile-panel](https://zhangzhi93.github.io/vue-calendar-panel/dist/index.html)
+
 ## Preview
 
-![image](https://raw.githubusercontent.com/zhangzhi93/vue-calendar-panel/master/static/20190830102716.png)
+![image](https://raw.githubusercontent.com/zhangzhi93/vue-calendar-panel/master/static/20191129181919.png)
 
 ## Usage
 
